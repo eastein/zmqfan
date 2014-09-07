@@ -1,12 +1,11 @@
-<A name="toc1-0" title="Pipes Rock" />
-# Pipes Rock
+<A name="toc1-0" title="Helper Code for ZMQ Usage" />
+# Helper Code for ZMQ Usage
 
-We all like pipes, but sometimes your pipes need fittings.
+Primary purpose is shuffling around JSON.
 
-* Have limited bandwidth and 20 consumers at the other end of the narrow pipe?  Use zmqfan to republish at the other end.
-* Have 2 services, both using bind? Can't configure them differently?  Connect to both and ferry messages from one to the other.
+<A name="toc2-5" title="zmqsub" />
+## zmqsub
 
-<A name="toc1-8" title="Implementation" />
-# Implementation
+This module is for decoding & encoding JSON and receiving & sending it over sockets.
 
-I'm working on making this work in Python.  If I need to I'll reimplement it in c to get a bit more performance.
+*It's a little bit dodgy at the moment, needs some shine & polish.*  Particularly, the class names in zmqsub are somewhat wrong right now, and it needs better error handling. Not yet 1.0, so the API could change. If you need stability, use a git commit id or an exact version number in PyPI.
