@@ -10,5 +10,5 @@ This module is for decoding & encoding JSON and receiving & sending it over sock
 
 ### zmqsub unit tests
 
-    cd zmqsub
+    cd zmqfan
     nosetests -vv tests/
