@@ -1,3 +1,11 @@
 # 0.5.0
 
 Initial release of a module I've been copying between my projects in an entirely slapdash manner for far too long.
+
+# 0.6.0
+
+Fixes namespace issues (https://github.com/eastein/zmqfan/issues/2).
+
+Details:
+
+TBD
