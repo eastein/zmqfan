@@ -10,4 +10,4 @@ setup(name='zmqfan',
       url='https://github.com/eastein/zmqfan/',
       install_requires=['pyzmq>=14'],
       packages=['zmqfan'],
-     )
+      )
