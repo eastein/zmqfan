@@ -7,6 +7,41 @@ class NoMessagesException(Exception):
     pass
 
 
+def _mkindex(sockets):
+    idx = dict(map(lambda s: (s.fileno(), s), filter(lambda s: hasattr(s, 'fileno'), sockets)))
+    nl = []
+    for s in sockets:
+        if isinstance(s, JSONZMQ):
+            idx[s.s] = s
+            nl.append(s.s)
+        else:
+            nl.append(s)
+
+    return idx, nl
+
+
+def _useindex(activelist, index):
+    r = []
+    for s in activelist:
+        if s in index:
+            r.append(index[s])
+        else:
+            r.append(s)
+    return r
+
+
+def select(rlist, wlist, xlist, timeout):
+    i, rlist = _mkindex(rlist)
+    wi, wlist = _mkindex(wlist)
+    xi, xlist = _mkindex(xlist)
+
+    i.update(wi)
+    i.update(xi)
+
+    r, w, x = zmq.select(rlist, wlist, xlist, timeout)
+    return _useindex(r, i),  _useindex(w, i), _useindex(x, i)
+
+
 class JSONZMQ(object):
 
     def get_context(self, context):
