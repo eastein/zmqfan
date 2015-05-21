@@ -63,7 +63,7 @@ class ConnectSub(JSONZMQ):
     def __init__(self, url, context=None):
         self.c = self.get_context(context)
         self.s = self.c.socket(zmq.SUB)
-        self.s.setsockopt(zmq.SUBSCRIBE, "")
+        self.s.setsockopt(zmq.SUBSCRIBE, b"")
         self.s.connect(url)
         self._last = None
 
@@ -125,7 +125,7 @@ class BindSub(JSONZMQ):
     def __init__(self, url, context=None):
         self.c = self.get_context(context)
         self.s = self.c.socket(zmq.SUB)
-        self.s.setsockopt(zmq.SUBSCRIBE, "")
+        self.s.setsockopt(zmq.SUBSCRIBE, b"")
         self.s.bind(url)
 
     def recv(self, timeout=0.0):

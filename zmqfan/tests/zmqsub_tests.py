@@ -21,7 +21,7 @@ def tcp_port_chooser(cls, *a, **kw):
             port = random.randint(LOW, HIGH)
             url = URLPAT % port
             return url, cls(url, *a, **kw)
-        except zmq.error.ZMQError, _ze:
+        except zmq.error.ZMQError as _ze:
             ze = _ze
         t += 1
 
