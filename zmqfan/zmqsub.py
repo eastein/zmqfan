@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from __future__ import print_function
 import codecs
 import zmq
 import json
@@ -8,37 +10,17 @@ class NoMessagesException(Exception):
 
 def debugp(s):
     import time
-    print('%0.4f: %s' % (time.time(), s))
+    print(('%0.4f: %s' % (time.time(), s)))
 
 def _mkindex(sockets):
-    """
-    Make an index from sockets.
-    :param sockets: list of sockets; Each socket may be of type JSONZMQ or type socket.socket
-    :return: need to work that out.. sorry. I should have documented this when I wrote it.
-    """
-    items_remaining = len(sockets)
-    idx = dict(map(lambda s: (s.fileno(), s), filter(lambda s: hasattr(s, 'fileno'), sockets)))
-    debugp("was able to put %d items in the index using file numbers" % len(idx))
-    nl = list(idx.values())
-    items_remaining -= len(nl)
-    debugp("building remainder of index, %d items to go" % items_remaining)
+    idx = dict([(s.fileno(), s) for s in [s for s in sockets if hasattr(s, 'fileno')]])
+    nl = []
     for s in sockets:
-        debugp("figuring out where to put %s in the index" % s)
         if isinstance(s, JSONZMQ):
-            debugp("%s is a JSONZMQ, inserting its core socket %s in idx" %(s,  s.s))
-            idx[s.s.fd] = s
-            nl.append(s.s.fd)
-            items_remaining -= 1
-        elif isinstance(s, int):
-            debugp("%s is a raw FD, no need to index")
-            items_remaining -= 1
+            idx[s.s] = s
+            nl.append(s.s)
+        else:
             nl.append(s)
-        elif isinstance(s, zmq.Socket):
-            debugp("%s is a zmq socket, indexing by fd")
-            idx[s.fd] = s
-            nl.append(s.fd)
-
-    debugp("at index build end %d items were not usable" % items_remaining)
 
     return idx, nl
 
