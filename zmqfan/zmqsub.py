@@ -54,20 +54,25 @@ def _useindex(activelist, index):
     for s in activelist:
         debugp('%s is in activelist' % s)
         if s in index:
+            debugp("%s was ind index. found item %s" % (s, index[s]))
             r.append(index[s])
         else:
+            debugp("%s was not in index, so passed it through without checking it.")
             r.append(s)
     return r
 
 
 def select(rlist, wlist, xlist, timeout):
-    rindex, rlist = _mkindex(rlist)
-    windex, wlist = _mkindex(wlist)
-    xindex, xlist = _mkindex(xlist)
+    i, rlist = _mkindex(rlist)
+    wi, wlist = _mkindex(wlist)
+    xi, xlist = _mkindex(xlist)
+
+    i.update(wi)
+    i.update(xi)
 
     r, w, x = zmq.select(rlist, wlist, xlist, timeout)
 
-    return _useindex(r, rindex),  _useindex(w, windex), _useindex(x, xindex)
+    return _useindex(r, i),  _useindex(w, i), _useindex(x, i)
 
 
 class JSONZMQ(object):
