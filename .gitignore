@@ -2,3 +2,8 @@
 *.pyc
 *.pyo
 dist/*
+.coverage
+.idea
+build/
+zmqfan.egg*
+*.bak
