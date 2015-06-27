@@ -49,9 +49,10 @@ cchooser = inproc_chooser
 
 
 from zmqfan.zmqsub import debugp
+import zmqfan.zmqsub
+zmqfan.zmqsub.VERBOSE = True
 
 import time
-
 
 
 class BasicTests(unittest.TestCase):
