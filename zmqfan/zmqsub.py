@@ -157,7 +157,7 @@ class BindSub(JSONZMQ):
         if r:
             msg = self.s.recv()
             try:
-                self._last = json.loads(msg)
+                self._last = json.loads(codecs.decode(msg, 'utf8'))
                 return self._last
             except ValueError:
                 pass
