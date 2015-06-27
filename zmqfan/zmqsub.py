@@ -52,6 +52,14 @@ def _useindex(activelist, index):
     return r
 
 
+def decode_utf8_json(buf):
+    try:
+        unicode_msg = codecs.decode(buf, 'utf-8')
+        return json.loads(unicode_msg)
+    except UnicodeDecodeError:
+        raise ValueError("message was not valid utf-8.")
+
+
 def select(rlist, wlist, xlist, timeout):
     i, rlist = _mkindex(rlist)
     wi, wlist = _mkindex(wlist)
@@ -103,7 +111,7 @@ class ConnectSub(JSONZMQ):
             msg = self.s.recv()
 
         if msg is not None:
-            self._last = json.loads(codecs.decode(msg, 'utf8'))
+            self._last = decode_utf8_json(msg)
 
         return self._last
 
@@ -111,9 +119,11 @@ class ConnectSub(JSONZMQ):
         msg = None
         r, w, x = zmq.select([self.s], [], [], timeout)
         if r:
-            msg = codecs.decode(self.s.recv(), 'utf8')
-            self._last = json.loads(msg)
-            return self._last
+            try:
+                self._last = decode_utf8_json(self.s.recv())
+                return self._last
+            except ValueError:
+                raise NoMessagesException
         else:
             raise NoMessagesException
 
@@ -152,14 +162,12 @@ class BindSub(JSONZMQ):
         self.s.bind(url)
 
     def recv(self, timeout=0.0):
-        msg = None
         r, w, x = zmq.select([self.s], [], [], timeout)
         if r:
-            msg = self.s.recv()
             try:
-                self._last = json.loads(codecs.decode(msg, 'utf8'))
+                self._last = decode_utf8_json(self.s.recv())
                 return self._last
             except ValueError:
-                pass
+                raise NoMessagesException
         else:
             raise NoMessagesException

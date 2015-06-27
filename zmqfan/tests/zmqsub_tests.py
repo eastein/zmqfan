@@ -84,3 +84,20 @@ class BasicTests(unittest.TestCase):
         sub = zmqsub.ConnectSub(url, context=pub)
         pub.send({u'您好': u'World'})
         self.assertEquals({u'您好': u'World'}, sub.recv(timeout=2.0))
+    
+    def test_1_msg_invalid_unicode_in_packet_ignored_logged(self):
+        url = Inproc.pick()
+        debugp('using url %s' % url)
+        ctx = zmq.Context(1)
+        sock = ctx.socket(zmq.PUB)
+        sock.bind(url)
+
+        time.sleep(0.2)
+
+        sub = zmqsub.ConnectSub(url, context=ctx)
+
+        time.sleep(1.0)
+
+        sock.send(b'\xe2')
+
+        self.assertRaises(zmqsub.NoMessagesException, sub.recv, timeout=0.5)
