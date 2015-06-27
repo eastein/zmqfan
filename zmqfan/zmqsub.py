@@ -3,14 +3,18 @@ from __future__ import print_function
 import codecs
 import zmq
 import json
+import time
+
 
 class NoMessagesException(Exception):
     pass
 
+VERBOSE = False
+
 
 def debugp(s):
-    import time
     print(('%0.4f: %s' % (time.time(), s)))
+
 
 def _mkindex(sockets):
     idx = dict([(s.fileno(), s) for s in [s for s in sockets if hasattr(s, 'fileno')]])
@@ -24,6 +28,7 @@ def _mkindex(sockets):
 
     return idx, nl
 
+
 def _useindex(activelist, index):
     """
     Given a list of items returned from zmq.select and the index made by _mkindex, return the list of objects
@@ -34,12 +39,15 @@ def _useindex(activelist, index):
     """
     r = []
     for s in activelist:
-        debugp('%s is in activelist' % s)
+        if VERBOSE:
+            debugp('%s is in activelist' % s)
         if s in index:
-            debugp("%s was ind index. found item %s" % (s, index[s]))
+            if VERBOSE:
+                debugp("%s was ind index. found item %s" % (s, index[s]))
             r.append(index[s])
         else:
-            debugp("%s was not in index, so passed it through without checking it.")
+            if VERBOSE:
+                debugp("%s was not in index, so passed it through without checking it.")
             r.append(s)
     return r
 
