@@ -1,0 +1,10 @@
+test is not passing due to slow start probably.
+
+http://stackoverflow.com/questions/20658238/zeromq-pubsub-not-working-w-pyzmq
+http://stackoverflow.com/questions/15945915/zeromq-inter-process-communication-from-single-thread-loses-messages
+
+http://zguide.zeromq.org/page:all#Getting-the-Message-Out
+https://zeromq.github.io/pyzmq/api/zmq.html
+http://stackoverflow.com/questions/25523231/zmq-latency-with-pub-sub-slow-subscriber
+http://stackoverflow.com/questions/18008482/how-to-avoid-dropping-messages-zeromq-pub-sub
+
